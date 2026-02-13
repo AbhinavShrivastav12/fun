@@ -16,10 +16,8 @@
 
 :root {
     --primary: #ff6b9d;
-    --secondary: #fec5e5;
     --accent: #ff4757;
     --dark: #2d3436;
-    --light: #ffeef8;
 }
 
 body {
@@ -66,7 +64,7 @@ h1 {
 
 .buttons {
     position: relative;
-    height: 100px;
+    height: 120px;
 }
 
 button {
@@ -87,10 +85,6 @@ button {
     left: 20%;
 }
 
-#yesBtn:hover {
-    transform: scale(1.1);
-}
-
 #noBtn {
     background: linear-gradient(135deg, #95a5a6, #7f8c8d);
     color: white;
@@ -105,6 +99,38 @@ button {
     font-size: 2rem;
     color: var(--accent);
     margin-bottom: 20px;
+}
+
+/* Custom Popup */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: white;
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    text-align: center;
+    z-index: 1000;
+    transition: 0.3s ease;
+}
+
+.popup.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.popup p {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+}
+
+.popup button {
+    position: static;
+    background: var(--accent);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 30px;
 }
 </style>
 </head>
@@ -125,8 +151,16 @@ button {
     <div id="celebrationSection" class="celebration">
         <h2>I knew it! 💖</h2>
         <p>You just made me the happiest person in the world! 🥰</p>
+        <img src="image.png" alt="love" width="200" height="200">
         <p style="margin-top:20px; font-size:1.4rem;">I love you too ❤️</p>
     </div>
+</div>
+
+<!-- Popup -->
+<div class="popup" id="popup">
+    <p>Don't you have a heart? 💔😢</p>
+    <img src="image copy.png" alt="love" width="200" height="200" style="flex: 1px;margin-bottom: 10px;">
+    <button onclick="closePopup()">Ok fine...</button>
 </div>
 
 <script>
@@ -135,6 +169,7 @@ const noBtn = document.getElementById('noBtn');
 const questionSection = document.getElementById('questionSection');
 const celebrationSection = document.getElementById('celebrationSection');
 const container = document.querySelector('.container');
+const popup = document.getElementById('popup');
 
 let attempts = 0;
 let scale = 1;
@@ -142,10 +177,13 @@ let scale = 1;
 function moveNoButton() {
     attempts++;
 
+    if (attempts === 3) {
+        popup.classList.add("active");
+    }
+
     scale -= 0.15;
     if (scale < 0.4) scale = 0.4;
 
-    // Enlarge Yes button
     yesBtn.style.transform = `scale(${1 + attempts * 0.15})`;
 
     const containerRect = container.getBoundingClientRect();
@@ -158,6 +196,10 @@ function moveNoButton() {
     const randomY = Math.random() * maxY - containerRect.height / 2 + btnRect.height / 2;
 
     noBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(${scale})`;
+}
+
+function closePopup() {
+    popup.classList.remove("active");
 }
 
 // Desktop hover
